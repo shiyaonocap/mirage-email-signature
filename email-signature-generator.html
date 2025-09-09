@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Webfont -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <title>Mirage Email Signature</title>
+
+  <style>
+    body { margin:24px; font-family: "Inter", Helvetica, Arial, sans-serif; color:#222; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%; }
+    .grid { display:grid; grid-template-columns: 320px 1fr; gap:24px; align-items:start; }
+    .card { border:1px solid #e5e7eb; border-radius:10px; padding:16px; }
+    .label { font-size:12px; color:#434647; margin:0 0 6px 0; }
+    .input { width:100%; padding:10px 12px; font-size:14px; border:1px solid #d1d5db; border-radius:8px; outline:none; box-sizing:border-box; }
+    .input:focus { border-color:#00D0FF; box-shadow:0 0 0 3px rgba(59,130,246,0.15); }
+    .row { margin-bottom:12px; }
+    .actions { display:flex; gap:8px; align-items:center; }
+    .btn { appearance:none; border:0; border-radius:10px; background:#00D0FF; color:#fff; font-weight:600; padding:10px 14px; cursor:pointer; }
+    .btn.secondary { background:#f3f4f6; color:#1D1F20; }
+    .muted { color:#6b7280; font-size:12px; }
+    .preview-card { background:#fff; border:1px dashed #e5e7eb; border-radius:10px; padding:16px; }
+    .styles-row { display:flex; gap:12px; align-items:stretch; flex-wrap:nowrap; }
+    .style-card { display:flex; flex-direction:column; flex:1 1 0; min-width:0; background:#fff; border:1px dashed #e5e7eb; border-radius:10px; padding:12px; }
+    .style-actions { margin-top:auto; padding-top:10px; text-align:center; }
+    .style-title { font-size:12px; color:#6b7280; margin:0 0 8px 0; text-align:center; }
+    @media (max-width: 760px) { .grid { grid-template-columns:1fr; } }
+    table img { display:block; }
+    a { text-decoration:none; }
+
+    /* Dark mode toggle UI */
+    .toggle { display:inline-flex; background:#f3f4f6; border-radius:10px; padding:4px; gap:4px; align-items:center; }
+    .toggle button { appearance:none; border:0; background:transparent; padding:6px 10px; border-radius:8px; font-weight:600; cursor:pointer; color:#1D1F20; }
+    .toggle button.active { background:#1D1F20; color:#fff; }
+    .preview-header { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 0 8px 0; }
+
+    /* Simulated Gmail dark mode (colors only, no image inversion) */
+    .preview-card.gmail-dark { background:#0b0f14; border-color:#1f2937; }
+    .preview-card.gmail-dark .label, 
+    .preview-card.gmail-dark .style-title { color:#9ca3af; }
+    .preview-card.gmail-dark .style-card { background:#0f141a; border-color:#1f2937; }
+    .preview-card.gmail-dark .btn.secondary { background:#1f2937; color:#e5e7eb; }
+    .preview-card.gmail-dark .toggle { background:#0f141a; }
+    .preview-card.gmail-dark .toggle button { color:#e5e7eb; }
+    .preview-card.gmail-dark .toggle button.active { background:#1D1F20; color:#fff; }
+    /* Override inline text colors inside signatures */
+    .preview-card.gmail-dark .signature-block, 
+    .preview-card.gmail-dark .signature-block table,
+    .preview-card.gmail-dark .signature-block tr,
+    .preview-card.gmail-dark .signature-block td,
+    .preview-card.gmail-dark .signature-block p,
+    .preview-card.gmail-dark .signature-block span { color:#e5e7eb !important; }
+    .preview-card.gmail-dark .signature-block a { color:#93c5fd !important; }
+    .preview-card.gmail-dark .signature-block a.mirage-link { color:#e5e7eb !important; }
+    .preview-card.gmail-dark .signature-block .sig-role { color:#cbd5e1 !important; }
+    /* Any hairline borders inside signatures (if present) */
+    .preview-card.gmail-dark .signature-block [style*="border-bottom:1px solid #eee"] { border-bottom-color:#334155 !important; }
+  </style>
+
+</head>
+
+<body>
+  <h2 style="margin:0 0 10px 0; font-size:20px; font-weight:700;">Mirage Email Signature</h2>
+  <p style="margin:0 0 16px 0; font-size:14px; color:#434647;">Enter your details, preview the signature, then click Copy.<br />Paste into Gmail → Settings → See all settings → General → Signature.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="row">
+        <p class="label">Name</p>
+        <input class="input" id="field-name" type="text" placeholder="Your Name" value="Shiyao Liu">
+      </div>
+      <div class="row">
+        <p class="label">Role</p>
+        <input class="input" id="field-role" type="text" placeholder="Your Title" value="Visual Designer">
+      </div>
+      
+    </div>
+
+    <div class="preview-card" id="preview-card">
+      <div class="preview-header">
+        <h3 class="label" style="margin:0;">Preview</h3>
+        <div class="toggle" role="group" aria-label="Theme toggle">
+          <button type="button" id="theme-light" class="active">Light</button>
+          <button type="button" id="theme-dark">Dark</button>
+        </div>
+      </div>
+      <div class="styles-row" id="signature-wrapper">
+        <!-- Style 1 -->
+        <div class="style-card">
+          <p class="style-title">Style 1</p>
+          <!-- ======== SIGNATURE START ======== -->
+          <div class="signature-block" id="signature-block-1">
+            <table role="presentation" cellpadding="0" cellspacing="0" style="font-family: 'Inter', Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#222; mso-line-height-rule:exactly;">
+              <tr>
+                <td valign="top">
+                  <table role="presentation" cellpadding="0" cellspacing="0" style="font-family: 'Inter', Arial, Helvetica, sans-serif;">
+                    <tr>
+                      <td style="font-weight:700; font-size:16px; color:#1D1F20;"><span class="sig-name">Shiyao Liu</span></td>
+                    </tr>
+                    <tr>
+                      <td style="color:#434647;"><span class="sig-role">Visual Designer</span></td>
+                    </tr>
+                    <tr>
+                      <td height="10" style="line-height:10px; font-size:0;">&nbsp;</td>
+                    </tr>
+                    
+                    <tr>
+                      <td height="12" style="line-height:12px; font-size:0;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <a href="https://mirage.app/homepage" style="text-decoration:none;">
+                          <img class="sig-logo" src="https://i.imgur.com/AOt1lmy.png" width="100" alt="Company Logo" style="display:block; border:0; outline:none; text-decoration:none;">
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- ======== SIGNATURE END ======== -->
+          <div class="style-actions">
+            <button class="btn" id="btn-copy-1" type="button">Copy signature</button>
+          </div>
+        </div>
+
+        <!-- Style 2 -->
+        <div class="style-card">
+          <p class="style-title">Style 2</p>
+          <div class="signature-block" id="signature-block-2">
+            <table role="presentation" cellpadding="0" cellspacing="0" style="font-family: 'Inter', Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#222; mso-line-height-rule:exactly;">
+              <tr>
+                <td valign="top">
+                  <table role="presentation" cellpadding="0" cellspacing="0" style="font-family: 'Inter', Arial, Helvetica, sans-serif;">
+                    <tr>
+                      <td style="font-weight:700; font-size:16px; color:#1D1F20;"><span class="sig-name">Shiyao Liu</span></td>
+                    </tr>
+                    <tr>
+                      <td style="color:#434647;"><span class="sig-role">Visual Designer</span></td>
+                    </tr>
+                    <tr>
+                      <td height="10" style="line-height:10px; font-size:0;">&nbsp;</td>
+                    </tr>
+                    
+                    <tr>
+                      <td height="12" style="line-height:12px; font-size:0;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600; font-size:14px; line-height:20px; color:#1D1F20;">
+                        <a class="mirage-link" href="https://mirage.app/homepage" style="text-decoration:none; color: #1d1f20;;">Mirage.app</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td height="8" style="line-height:8px; font-size:0;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <a href="https://mirage.app/homepage" style="text-decoration:none;">
+                          <img class="sig-logo" src="https://i.imgur.com/AOt1lmy.png" width="100" alt="Company Logo" style="display:block; border:0; outline:none; text-decoration:none;">
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="style-actions">
+            <button class="btn" id="btn-copy-2" type="button">Copy signature</button>
+          </div>
+        </div>
+
+        <!-- Style 3 -->
+        <div class="style-card">
+          <p class="style-title">Style 3</p>
+          <div class="signature-block" id="signature-block-3">
+            <table role="presentation" cellpadding="0" cellspacing="0" style="font-family: 'Inter', Arial, Helvetica, sans-serif; font-size:14px; line-height:20px; color:#222; mso-line-height-rule:exactly;">
+              <tr>
+                <td valign="top">
+                  <table role="presentation" cellpadding="0" cellspacing="0" style="font-family: 'Inter', Arial, Helvetica, sans-serif;">
+                    <tr>
+                      <td style="font-weight:700; font-size:16px; color:#1D1F20;"><span class="sig-name">Shiyao Liu</span></td>
+                    </tr>
+                    <tr>
+                      <td style="color:#434647;"><span class="sig-role">Visual Designer</span></td>
+                    </tr>
+                    <tr>
+                      <td height="10" style="line-height:10px; font-size:0;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight: 600; font-size:14px; line-height:20px; color:#434647;">
+                        <a class="mirage-link" href="https://mirage.app/homepage" style="text-decoration:none; color:#434647;">Mirage.app</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <table role="presentation" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td>
+                              <a class="sig-link" href="https://www.linkedin.com/company/trymirage/" style="text-decoration:none;">
+                                <img src="https://i.imgur.com/hiu5X7M.png" width="24" height="24" alt="LinkedIn" style="display:block; border:0; outline:none; text-decoration:none;">
+                              </a>
+                            </td>
+                            <td width="6" style="font-size:0; line-height:0;">&nbsp;</td>
+                            <td>
+                              <a class="sig-link" href="https://x.com/trymirage" style="text-decoration:none;">
+                                <img src="https://i.imgur.com/QJVoCmz.png" width="24" height="24" alt="X" style="display:block; border:0; outline:none; text-decoration:none;">
+                              </a>
+                            </td>
+                            <td width="6" style="font-size:0; line-height:0;">&nbsp;</td>
+                            <td>
+                              <a class="sig-link" href="https://www.tiktok.com/@captionsapp" style="text-decoration:none;">
+                                <img src="https://i.imgur.com/9wnVwjt.png" width="24" height="24" alt="TikTok" style="display:block; border:0; outline:none; text-decoration:none;">
+                              </a>
+                            </td>
+                            <td width="6" style="font-size:0; line-height:0;">&nbsp;</td>
+                            <td>
+                              <a class="sig-link" href="https://www.instagram.com/getcaptionsapp/" style="text-decoration:none;">
+                                <img src="https://i.imgur.com/UrCZ9cC.png" width="24" height="24" alt="Instagram" style="display:block; border:0; outline:none; text-decoration:none;">
+                              </a>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td height="12" style="line-height:12px; font-size:0;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <a href="https://mirage.app/homepage" style="text-decoration:none;">
+                          <img class="sig-logo" src="https://i.imgur.com/AOt1lmy.png" width="100" alt="Company Logo" style="display:block; border:0; outline:none; text-decoration:none;">
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="style-actions">
+            <button class="btn" id="btn-copy-3" type="button">Copy signature</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const nameEl = document.getElementById('field-name');
+      const roleEl = document.getElementById('field-role');
+      const sigBlocks = Array.from(document.querySelectorAll('.signature-block'));
+      const nameTargets = Array.from(document.querySelectorAll('.sig-name'));
+      const roleTargets = Array.from(document.querySelectorAll('.sig-role'));
+
+      function update(){
+        const name = (nameEl.value || '').trim() || 'Your Name';
+        const role = (roleEl.value || '').trim() || 'Your Title';
+        nameTargets.forEach(el => el.textContent = name);
+        roleTargets.forEach(el => el.textContent = role);
+      }
+      nameEl.addEventListener('input', update);
+      roleEl.addEventListener('input', update);
+      update();
+
+      async function copyHTML(node){
+        const html = node.innerHTML;
+        const text = node.innerText || node.textContent || '';
+        if (navigator.clipboard && window.ClipboardItem) {
+          try {
+            const blobHTML = new Blob([html], { type: 'text/html' });
+            const blobText = new Blob([text], { type: 'text/plain' });
+            await navigator.clipboard.write([new ClipboardItem({ 'text/html': blobHTML, 'text/plain': blobText })]);
+            alert('Signature copied to clipboard. Paste into Gmail settings.');
+            return true;
+          } catch (err) {
+            // fallback below
+          }
+        }
+        // Fallback: select node and execCommand('copy')
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNode(node);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        const ok = document.execCommand('copy');
+        selection.removeAllRanges();
+        if (ok) {
+          alert('Signature copied to clipboard. Paste into Gmail settings.');
+        } else {
+          alert('Could not auto-copy. Manually select the signature, then press ⌘/Ctrl+C.');
+        }
+        return ok;
+      }
+
+      // Wire up per-style copy buttons
+      const copyButtons = [
+        { btn: document.getElementById('btn-copy-1'), block: document.getElementById('signature-block-1') },
+        { btn: document.getElementById('btn-copy-2'), block: document.getElementById('signature-block-2') },
+        { btn: document.getElementById('btn-copy-3'), block: document.getElementById('signature-block-3') },
+      ];
+      copyButtons.forEach(({btn, block}) => {
+        if (btn && block) btn.addEventListener('click', function(){ copyHTML(block); });
+      });
+      // Manual selection: users can select signature content directly if needed.
+
+      // Theme toggle (simulate Gmail dark mode)
+      const previewCard = document.getElementById('preview-card');
+      const btnLight = document.getElementById('theme-light');
+      const btnDark = document.getElementById('theme-dark');
+      function setTheme(mode){
+        if (!previewCard) return;
+        if (mode === 'dark') {
+          previewCard.classList.add('gmail-dark');
+          btnDark.classList.add('active');
+          btnLight.classList.remove('active');
+          try { localStorage.setItem('sig_theme', 'dark'); } catch(_e) {}
+        } else {
+          previewCard.classList.remove('gmail-dark');
+          btnLight.classList.add('active');
+          btnDark.classList.remove('active');
+          try { localStorage.setItem('sig_theme', 'light'); } catch(_e) {}
+        }
+      }
+      if (btnLight) btnLight.addEventListener('click', () => setTheme('light'));
+      if (btnDark) btnDark.addEventListener('click', () => setTheme('dark'));
+      // Initialize from last selection if present
+      try {
+        const saved = localStorage.getItem('sig_theme');
+        if (saved === 'dark') setTheme('dark');
+      } catch(_e) {}
+    })();
+  </script>
+</body>
+</html>
